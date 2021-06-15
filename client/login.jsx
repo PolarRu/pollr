@@ -6,6 +6,7 @@ import Box from "@material-ui/core/Box";
 import { Link, Redirect } from "react-router-dom";
 import Landing from "./landing.jsx";
 import GuestLogIn from "./guestlogin.jsx";
+import Toastify from 'react-toastify'
 
 /*
 Login page allows user to log in, or allows them to
@@ -13,6 +14,7 @@ navigate to the sign up page
 */
 
 export default function Login(props) {
+  const [isLogin, setIsLogin] = useState(true);
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(null);
@@ -28,6 +30,7 @@ export default function Login(props) {
 
   const signUp = () => {
     // fetch request to the server on the 'signup' route, method is post
+
     fetch("/signup", {
       method: "POST",
       headers: {
@@ -36,6 +39,7 @@ export default function Login(props) {
       body: JSON.stringify({ username, password }),
     })
       .then((response) => response.json())
+      
       .then((data) => {
         console.log("new user signed up: ", data);
         setRedirect(data);
@@ -90,7 +94,7 @@ export default function Login(props) {
   return (
     <div>
       <form className="loginPage">
-        <h1>Log In</h1>
+        <h1>{isLogin ? "Log in" : "Sign up"}</h1>
         <Box m={2}>
           <div>
             <TextField
@@ -114,21 +118,35 @@ export default function Login(props) {
             />
           </div>
         </Box>
-        <div className="buttonDivLogin">
-          <Button
-            onClick={() => signUp()}
-            disabled={!validateForm()}
-            variant="contained"
-          >
-            Sign Up
-          </Button>
-          <Button
-            onClick={() => login()}
-            disabled={!validateForm()}
-            variant="contained"
-          >
-            Login
-          </Button>
+        <div>
+          <div>
+            <Button
+              onClick={() => {
+                if(validateForm() /*&& account exists in DB */ ){
+                  if (isLogin) {
+                  return login();
+                }
+ 
+                return signUp();
+                }
+                return;
+              }}
+              // disabled={!validateForm()}
+              variant="contained"
+            >
+              {isLogin ? "Log in" : "Sign up"}
+            </Button>
+          </div>
+          <div>
+            <p
+              style={{ cursor: "pointer" }}
+              onClick={() => setIsLogin(!isLogin)}
+              // disabled={!validateForm()}
+              variant="contained"
+            >
+              {isLogin ? "Create an account" : "Already have an account?"}
+            </p>
+          </div>
         </div>
       </form>
       {props.location.state.pollId && <GuestLogIn {...props} />}

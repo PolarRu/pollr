@@ -3,9 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const Schema = mongoose.Schema;
 
-const { MONGO_URI } = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../dist/config.json"))
-);
+const { MONGO_URI } = require('../env');
 //_id is a key given to every document made with mongo. To access the document by id# pass in _id
 mongoose
   .connect(MONGO_URI, {

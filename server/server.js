@@ -80,6 +80,17 @@ app.post(
   }
 );
 
+app.post('/logout',sessionController.deleteSession,cookieController.deleteCookie,(req,res) => {
+  try{
+    return res.status(200).redirect('/');
+  }
+  catch(err) {
+    res
+        .status(200)
+        .json({ tabs: "/logout", message: "error in logout" });
+  }
+});
+
 // app.get("/guest", (req, res) => {
 //   return res
 //     .status(200)

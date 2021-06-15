@@ -51,5 +51,19 @@ sessionController.isLoggedIn = async (req, res, next) => {
     });
   }
 };
+sessionController.deleteSession = async (req,res,next) => {
+  try{
+    if(req.cookies.ssid){
+      await Session.deleteOne({sessionId: req.cookies.ssid});
+    };
+    return next();
+  }
+  catch(err){
+    return next({
+      log: "ERROR from sessionController.deleteSession",
+      message: { err: `Did not delete session properly ERROR: ${err}` },
+    });
+  };
+};
 
 module.exports = sessionController;

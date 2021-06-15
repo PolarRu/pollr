@@ -6,8 +6,9 @@ import Box from "@material-ui/core/Box";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect,useHistory } from "react-router-dom";
 import PollsHistoryContainer from "./pollshistorycontainer.jsx";
+import { LocalDiningOutlined } from "@material-ui/icons";
 
 /*
 Landing page accessible only to logged in user
@@ -24,6 +25,8 @@ export default function Landing(props) {
   let [optionNames, setOptionNames] = useState([]);
   // redirect
   const [redirect, setRedirect] = useState(null);
+
+  const history = useHistory();
 
   // validate that at least two poll candidates exist
   function validateForm() {
@@ -120,13 +123,19 @@ export default function Landing(props) {
         }}
       />
     );
+    async function logout(){
+      await fetch('/logout',{
+        method:'POST',
+      });
+    history.push('/');
+    };
 
   return (
     <div id="landingPage">
       <div id="pollCreator">
         <h1>Create Poll</h1>
         <div>
-          <a href="#">Log Out</a>
+          <Button onClick = {()=>{logout()}}>Log Out</Button>
         </div>
         <form>
           <Box m={2}>
