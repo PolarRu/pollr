@@ -1,3 +1,4 @@
+//
 const { User, Poll } = require("../../models/pollModels.js");
 const mongoose = require("mongoose");
 
@@ -5,7 +6,7 @@ const pollController = {};
 
 const serverLink = "http://localhost:8080/poll/";
 
-// const activePolls = {};
+const activePolls = {};
 
 // Standard server middleware
 let currIndex = 0;

@@ -10,6 +10,20 @@ const cookieController = require("../controllers/cookieController");
 const userController = require("../controllers/userController");
 const sessionController = require("../controllers/sessionController");
 
+const { MONGO_URI } = require("../env");
+
+mongoose
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // sets the name of the DB that our collections are part of
+    dbName: "Pollr",
+  })
+  .then(async () => {
+    console.log("Connected to Mongo DB.");
+  })
+  .catch((err) => console.log(err));
+console.log("Inside the Mongoose connection");
 
 const app = express();
 
@@ -29,6 +43,8 @@ const PORT = 3000;
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+console.log('server')
 
 app.get("/", (req, res) => {
   res.status(200).sendFile(path.join(__dirname, "../index.html"));
@@ -81,16 +97,18 @@ app.post(
   }
 );
 
-app.post('/logout',sessionController.deleteSession,cookieController.deleteCookie,(req,res) => {
-  try{
-    return res.status(200).redirect('/');
+app.post(
+  "/logout",
+  sessionController.deleteSession,
+  cookieController.deleteCookie,
+  (req, res) => {
+    try {
+      return res.status(200).redirect("/");
+    } catch (err) {
+      res.status(200).json({ tabs: "/logout", message: "error in logout" });
+    }
   }
-  catch(err) {
-    res
-        .status(200)
-        .json({ tabs: "/logout", message: "error in logout" });
-  }
-});
+);
 
 // app.get("/guest", (req, res) => {
 //   return res
@@ -117,8 +135,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.message);
 });
 
-app.listen(PORT, () => {
+module.exports = app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}...`);
 });
-
-module.exports = app;

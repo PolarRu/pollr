@@ -3,20 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const Schema = mongoose.Schema;
 
-const { MONGO_URI } = require('../env');
 //_id is a key given to every document made with mongo. To access the document by id# pass in _id
-mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    // sets the name of the DB that our collections are part of
-    dbName: "Pollr",
-  })
-  .then(async () => {
-    console.log("Connected to Mongo DB.");
-  })
-  .catch((err) => console.log(err));
-console.log("Inside the Mongoose connection");
 
 const userSchema = new Schema({
   username: { type: String, required: true },
