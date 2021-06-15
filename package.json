@@ -5,12 +5,13 @@
   "main": "./client/index.jsx",
   "scripts": {
     "dev": "cross-env NODE_ENV=development; concurrently \"nodemon server/server.js\"  \"webpack-dev-server --open\"",
-    "start": "cross-env NODE_ENV=production; concurrently \"webpack\" \"node server/server.js\""
+    "start": "cross-env NODE_ENV=production; concurrently \"webpack\" \"node server/server.js\"",
+    "test": "jest --verbose"
   },
   "keywords": [
     "voting"
   ],
-  "author": "Davette Bryan, Robert Du, Victor Luo, Michael Weber",
+  "author": "Walker Marsh, Ranisha Rafeeque, Alex Zhang, Hamilton Yu",
   "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^4.11.4",
@@ -33,6 +34,8 @@
     "cookie-parser": "^1.4.5",
     "copy-webpack-plugin": "^5.0.5",
     "date-fns": "^2.22.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^7.12.1",
     "eslint-import-resolver-webpack": "^0.13.0",
     "eslint-plugin-import": "^2.22.1",
@@ -40,6 +43,7 @@
     "eslint-plugin-react": "^7.21.5",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^27.0.4",
     "mongoose": "^5.12.13",
     "nodejs-websocket": "^1.7.2",
     "nodemon": "^2.0.7",
