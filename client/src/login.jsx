@@ -31,7 +31,7 @@ export default function Login(props) {
   const signUp = () => {
     // fetch request to the server on the 'signup' route, method is post
 
-    fetch("/signup", {
+    fetch("/api/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export default function Login(props) {
 
   const login = () => {
     // fetch request to the server on the 'login' route, method is post
-    fetch("/login", {
+    fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

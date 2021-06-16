@@ -1,11 +1,11 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  mode: 'development',
-  entry: './client/index.jsx',
+  mode: "development",
+  entry: "./client/index.jsx",
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
   },
   module: {
     rules: [
@@ -13,21 +13,24 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: [ 
-              "@babel/plugin-transform-runtime"
-            ]
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: ["@babel/plugin-transform-runtime"],
           },
         },
       },
     ],
   },
   devServer: {
-    publicPath: '/dist/',
+    port: 8080,
+    contentBase: path.resolve(__dirname, "dist"),
+    publicPath: "/",
+    compress: true,
+    hot: true,
+    historyApiFallback: true,
     proxy: {
-      '/': 'http://localhost:3000',
-    }
-  }
+      "/api/**": "http://localhost:3000",
+    },
+  },
 };

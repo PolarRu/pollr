@@ -4,7 +4,7 @@ import PollsHistoryDisplay from "./pollshistorydisplay.jsx";
 export default function PollsHistoryContainer(props) {
   const [polls, setPolls] = useState([]);
   useEffect(() => {
-    fetch(`/poll/list/${props.userId}`)
+    fetch(`/api/poll/list/${props.userId}`)
       .then((res) => res.json())
       .then((data) => setPolls(data));
   }, []);

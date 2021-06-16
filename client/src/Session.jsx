@@ -5,7 +5,7 @@ const Session = (props) => {
   const [loading, loadState] = useState(null);
 
   if (!loading) {
-    fetch("/login")
+    fetch("/api/login")
       .then((data) => data.json())
       .then((data) => {
         console.log(data);

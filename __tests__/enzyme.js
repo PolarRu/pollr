@@ -1,34 +1,25 @@
+import React from "react";
 import * as enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { shallow, mount, render } from 'enzyme';
-import Login from '../client/login'
-//import Landing from '../client/landing'
+import App from "../client/App";
+import Login from "../client/login";
+import Vote from "../client/Vote";
 
 enzyme.configure({ adapter: new Adapter() });
 
-
 describe("React unit tests", () => {
-  describe("LabeledText", () => {
+  describe("App", () => {
     let wrapper;
-    const props = {
-      location: {
-        state: {
-          pollId: 1,
-        }
-      },
-      match : {
-        params: {
-          pollId: 1,
-        }
-      }
-    };
 
     beforeAll(() => {
-      wrapper = enzyme.shallow(<Login {...props} />);
+      wrapper = enzyme.shallow(<App />);
     });
 
-    it("Renders a <p> tag with the label in bold", () => {
-      console.log(wrapper)
+    it("Renders app", () => {
+      // console.log(wrapper.debug());
+      expect(wrapper.find("main").exists()).toBeTruthy();
+      expect(wrapper.find("Switch").exists()).toBe(true);
+      expect(wrapper.find("Route").exists()).toBe(true);
     });
   });
 });

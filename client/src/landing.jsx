@@ -87,7 +87,7 @@ export default function Landing(props) {
 
   const createPoll = () => {
     // fetch request to the server on the 'poll' route, method is post, body: pollName, optionsNames, userId
-    fetch("/poll", {
+    fetch("/api/poll", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export default function Landing(props) {
       />
     );
     async function logout(){
-      await fetch('/logout',{
+      await fetch('/api/logout',{
         method:'POST',
       });
     history.push('/');

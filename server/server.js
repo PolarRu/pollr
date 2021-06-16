@@ -4,8 +4,8 @@ const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 
-// const WSServer = require("./websocket.js");
-// const connections = require("./routers/pollWebsocket.js"); // call this to setup the websocket routes
+const WSServer = require("./websocket.js");
+const connections = require("./routers/pollWebsocket.js"); // call this to setup the websocket routes
 
 const cookieController = require("../controllers/cookieController");
 const userController = require("../controllers/userController");
@@ -38,15 +38,15 @@ app.get("/dist/bundle.js", (req, res) => {
 app.use(express.static(path.join(__dirname, "../dist")));
 app.use(express.static(path.join(__dirname, "../")));
 
-app.get("/login", sessionController.isLoggedIn, (req, res) => {
+app.get("api/login", sessionController.isLoggedIn, (req, res) => {
   if (res.locals.isLoggedIn) {
     res.status(200).json({ tabs: "/landing", userId: res.locals.userId });
-  } else res.status(200).json({ tabs: "/login" });
+  } else res.status(200).redirect("/");
 });
 
 //Authentication
 app.post(
-  "/signup",
+  "/api/signup",
   userController.createUser,
   cookieController.createCookie,
   sessionController.createSession,
@@ -58,7 +58,7 @@ app.post(
 );
 
 app.post(
-  "/login",
+  "/api/login",
   userController.verifyUser,
   cookieController.createCookie,
   sessionController.createSession,
@@ -67,15 +67,13 @@ app.post(
       //redirect user in verifUser here
       res.status(200).json({ tabs: "/landing", userId: res.locals.userId });
     } else {
-      res
-        .status(200)
-        .json({ tabs: "/login", message: "Invalid username or password" });
+      res.status(200).redirect("/logout");
     }
   }
 );
 
 app.post(
-  "/logout",
+  "/api/logout",
   sessionController.deleteSession,
   cookieController.deleteCookie,
   (req, res) => {
@@ -95,7 +93,7 @@ app.post(
 
 // Routers
 const pollRouter = require("./routers/poll.js");
-app.use("/poll", pollRouter);
+app.use("/api/poll", pollRouter);
 
 /**
  * 404 handler
@@ -129,7 +127,7 @@ const runServer = async () => {
 
   return async () => {
     server.close();
-    // return WSServer.socket.close();
+    return WSServer.socket.close();
     // return new Promise(resolve => WSServer.socket.close(() => {
     //   console.log('closing websockets')
     //   resolve();
