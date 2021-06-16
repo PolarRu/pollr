@@ -1,31 +1,24 @@
 const path = require("path");
 const mongoose = require("mongoose");
+const request = require("supertest");
 const { MONGO_TEST_URI } = require("../env");
 const { User, Poll } = require("../models/pollModels.js");
-const request = require("supertest");
+const runServer = require("../server/server.js");
 
 const server = "http://localhost:3000";
 
 describe("db unit tests", () => {
-  let app;
+  let closeServer;
   beforeAll(() => {
-    // app = require("../server/server.js");
-    return mongoose
-      .connect(MONGO_TEST_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        // sets the name of the DB that our collections are part of
-        dbName: "Pollr",
-      })
-      .then(() => {
-        console.log("Connected to Mongo DB.");
-      })
-      .catch((err) => console.log(err));
+    return runServer().then((close) => {
+      closeServer = close;
+    });
   });
 
   afterAll(() => {
-    // app.close();
-    return mongoose.connection.close();
+    return closeServer().then(() => {
+      return mongoose.connection.close();
+    });
   });
 
   xdescribe("poll", () => {
@@ -170,12 +163,16 @@ describe("db unit tests", () => {
         return User.deleteMany();
       });
 
+      afterEach(() => {
+        return User.deleteMany();
+      });
+
       describe("POST", () => {
         const userData = {
           username: "test,",
           password: "testpass",
         };
-        it("responds with 200 status and text/html content type", () => {
+        it("successfully create a new user", () => {
           return (
             request(server)
               .post("/signup")
@@ -190,6 +187,34 @@ describe("db unit tests", () => {
                 expect(user).not.toBe(null);
               })
           );
+        });
+      });
+    });
+  });
+
+  describe("new poll", () => {
+    describe("/poll/", () => {
+      let data = {
+        pollName: "hello?",
+        optionNames: ["a", "b"],
+        userId: "r",
+      };
+      beforeEach(() => {
+        return Poll.deleteMany();
+      });
+      describe("POST", () => {
+        it("successfully creates a new poll", () => {
+          return request(server)
+            .post("/poll/")
+            .send(data)
+            .set("Accept", "application/json")
+            .expect(200)
+            .then((res) => {
+              return Poll.findOne({ question: data.pollName });
+            })
+            .then((poll) => {
+              expect(poll).not.toBe(null);
+            });
         });
       });
     });

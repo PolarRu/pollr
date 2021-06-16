@@ -4,9 +4,9 @@
   "description": "A decision-making app using ranked choice voting",
   "main": "./client/index.jsx",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development; concurrently \"nodemon server/server.js\"  \"webpack-dev-server --open\"",
-    "start": "cross-env NODE_ENV=production; concurrently \"webpack\" \"node server/server.js\"",
-    "test": "jest --verbose"
+    "dev": "cross-env NODE_ENV=development; concurrently \"nodemon server/index.js\"  \"webpack-dev-server --open\"",
+    "start": "cross-env NODE_ENV=production; concurrently \"webpack\" \"node server/index.js\"",
+    "test": "NODE_ENV=development jest --verbose"
   },
   "keywords": [
     "voting"
@@ -47,9 +47,15 @@
     "mongoose": "^5.12.13",
     "nodejs-websocket": "^1.7.2",
     "nodemon": "^2.0.7",
+    "regenerator-runtime": "^0.13.7",
     "supertest": "^6.1.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.9.0"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./setupTests.js"
+    ]
   }
 }
