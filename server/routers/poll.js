@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const pollController = require("../controllers/pollController.js");
+const { pollController } = require("../controllers");
 
 const router = express.Router();
 

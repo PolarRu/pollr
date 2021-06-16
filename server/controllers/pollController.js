@@ -1,10 +1,10 @@
 //
-const { User, Poll } = require("../../models/pollModels.js");
+const { User, Poll } = require("../models/pollModels.js");
 const mongoose = require("mongoose");
 
 const pollController = {};
 
-const serverLink = "http://localhost:8080/poll/";
+const serverLink = "http://localhost:3000/poll/";
 
 const activePolls = {};
 
@@ -101,6 +101,8 @@ pollController.addVote = async (req, res, next) => {
 
   res.locals = vote;
   return next();
+
+  // socketio.instance.to(room).emit(message)
 };
 
 pollController.closePoll = async (req, res, next) => {

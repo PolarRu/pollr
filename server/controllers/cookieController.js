@@ -5,9 +5,14 @@ const cookieController = {};
 
 cookieController.createCookie = (req, res, next) => {
   try {
-    if(res.locals.id) {
-      console.log('Set cookie: ', res.locals.id)
-      res.cookie("ssid", res.locals.id);
+    if (res.locals.id) {
+      console.log("Set cookie: ", res.locals.id);
+      res.cookie("ssid", res.locals.id, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        path: "*",
+      });
     }
     next();
   } catch (err) {
@@ -17,12 +22,11 @@ cookieController.createCookie = (req, res, next) => {
     });
   }
 };
-cookieController.deleteCookie = (req,res,next) =>{
-  try{
-    res.clearCookie('ssid')
+cookieController.deleteCookie = (req, res, next) => {
+  try {
+    res.clearCookie("ssid");
     return next();
-  }
-  catch(err){
+  } catch (err) {
     next({
       log: "ERROR from cookieController.deleteCookie",
       message: { err: `Did not delete cookie properly ERROR: ${err}` },
