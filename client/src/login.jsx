@@ -3,10 +3,9 @@ import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
-import { Link, Redirect } from "react-router-dom";
-import Landing from "./landing.jsx";
+import { Redirect } from "react-router-dom";
 import GuestLogIn from "./guestlogin.jsx";
-import Toastify from 'react-toastify'
+import * as ENV from "./env";
 
 /*
 Login page allows user to log in, or allows them to
@@ -18,7 +17,7 @@ export default function Login(props) {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(null);
-  console.log(props.location.state);
+
   // form validation; username and password need to be > one char
   function validateForm() {
     return username.length > 0 && password.length > 0;
@@ -31,15 +30,16 @@ export default function Login(props) {
   const signUp = () => {
     // fetch request to the server on the 'signup' route, method is post
 
-    fetch("/api/signup", {
+    fetch(ENV.API_URL + "/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
+      credentials: "include",
     })
       .then((response) => response.json())
-      
+
       .then((data) => {
         console.log("new user signed up: ", data);
         setRedirect(data);
@@ -51,12 +51,13 @@ export default function Login(props) {
 
   const login = () => {
     // fetch request to the server on the 'login' route, method is post
-    fetch("/api/login", {
+    fetch(ENV.API_URL + "/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -122,12 +123,12 @@ export default function Login(props) {
           <div>
             <Button
               onClick={() => {
-                if(validateForm() /*&& account exists in DB */ ){
+                if (validateForm() /*&& account exists in DB */) {
                   if (isLogin) {
-                  return login();
-                }
- 
-                return signUp();
+                    return login();
+                  }
+
+                  return signUp();
                 }
                 return;
               }}

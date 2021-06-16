@@ -1,9 +1,7 @@
 import React from "react";
 import * as enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import App from "../client/App";
-import Login from "../client/login";
-import Vote from "../client/Vote";
+import App from "../src/App";
 
 enzyme.configure({ adapter: new Adapter() });
 

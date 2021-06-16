@@ -1,52 +1,47 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const WSServer = require("./websocket.js");
 const connections = require("./routers/pollWebsocket.js"); // call this to setup the websocket routes
+const SocketIo = require("./io");
 
-const cookieController = require("../controllers/cookieController");
-const userController = require("../controllers/userController");
-const sessionController = require("../controllers/sessionController");
+const {
+  cookieController,
+  userController,
+  sessionController,
+} = require("./controllers");
 
-const { MONGO_URI, MONGO_TEST_URI, NODE_ENV } = require("../env");
+const { MONGO_URI, MONGO_TEST_URI, NODE_ENV } = require("./env");
+const PORT = 3001;
 
 const app = express();
 
-const PORT = 3000;
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-console.log("server");
+// serve
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
-app.get("/", (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, "../index.html"));
-});
-
-app.get("/style.css", (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, "../style.css"));
-});
-
-app.get("/dist/bundle.js", (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, "../dist/bundle.js"));
-});
-
-app.use(express.static(path.join(__dirname, "../dist")));
-app.use(express.static(path.join(__dirname, "../")));
-
-app.get("api/login", sessionController.isLoggedIn, (req, res) => {
+app.get("/login", sessionController.isLoggedIn, (req, res) => {
   if (res.locals.isLoggedIn) {
     res.status(200).json({ tabs: "/landing", userId: res.locals.userId });
-  } else res.status(200).redirect("/");
+  } else res.status(200).json({ tabs: "/login" });
 });
 
-//Authentication
+// --- Authentication ---
 app.post(
-  "/api/signup",
+  "/signup",
   userController.createUser,
   cookieController.createCookie,
   sessionController.createSession,
@@ -58,7 +53,7 @@ app.post(
 );
 
 app.post(
-  "/api/login",
+  "/login",
   userController.verifyUser,
   cookieController.createCookie,
   sessionController.createSession,
@@ -73,7 +68,7 @@ app.post(
 );
 
 app.post(
-  "/api/logout",
+  "/logout",
   sessionController.deleteSession,
   cookieController.deleteCookie,
   (req, res) => {
@@ -93,7 +88,7 @@ app.post(
 
 // Routers
 const pollRouter = require("./routers/poll.js");
-app.use("/api/poll", pollRouter);
+app.use("/poll", pollRouter);
 
 /**
  * 404 handler
@@ -111,19 +106,20 @@ app.use((err, req, res, next) => {
 });
 
 const runServer = async () => {
+  console.log("environment:", NODE_ENV);
   await mongoose.connect(
     NODE_ENV === "development" ? MONGO_TEST_URI : MONGO_URI,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      // sets the name of the DB that our collections are part of
-      dbName: "Pollr",
     }
   );
 
   const server = app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`);
   });
+  SocketIo.init(server);
+  SocketIo.start();
 
   return async () => {
     server.close();

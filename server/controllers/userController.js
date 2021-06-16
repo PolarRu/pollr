@@ -3,8 +3,15 @@ const bcrypt = require("bcrypt");
 
 const userController = {};
 
-userController.createUser = (req, res, next) => {
+userController.createUser = async (req, res, next) => {
   try {
+    const existingUser = await models.User.findOne({
+      username: req.body.username,
+    });
+    if (existingUser) {
+      throw Error("username already in use");
+    }
+
     console.log("req.body", req.body);
     const saltRounds = 10;
     const password = req.body.password;

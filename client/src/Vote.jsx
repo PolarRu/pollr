@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
+
 import {
   Button,
   Box,
@@ -18,6 +20,7 @@ const Vote = (props) => {
   const [selected, setSelected] = useState(-1);
   // copy to clipboard functionality
   const textAreaRef = useRef(null);
+  const history = useHistory();
 
   if (state === null) {
     const listener = (type, data) => {
@@ -139,21 +142,8 @@ const Vote = (props) => {
           <p>Poll participants:</p>
           {voteParticipants}
         </div>
-        {props.admin && (
-          <div className="linkContainer">
-            <p>Poll link: </p>
-            <textarea
-              ref={textAreaRef}
-              value={`${props.pollLink}`}
-              readonly
-            ></textarea>
-            <Button onClick={copyToClipboard} variant="contained">
-              Copy Link
-            </Button>
-          </div>
-        )}
+        {props.admin && <div className="linkContainer"></div>}
       </div>
-
       <div className="buttonDivLogin">
         <Button
           onClick={() => {
@@ -178,6 +168,7 @@ const Vote = (props) => {
                 userId: props.userId,
                 pollId: props.pollId,
               });
+              history.push("/landing");
             }}
             // disabled={!validateForm()}
             variant="contained"

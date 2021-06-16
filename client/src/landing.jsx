@@ -6,9 +6,9 @@ import Box from "@material-ui/core/Box";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import { Link, Redirect,useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import PollsHistoryContainer from "./pollshistorycontainer.jsx";
-import { LocalDiningOutlined } from "@material-ui/icons";
+import * as ENV from "./env";
 
 /*
 Landing page accessible only to logged in user
@@ -87,7 +87,7 @@ export default function Landing(props) {
 
   const createPoll = () => {
     // fetch request to the server on the 'poll' route, method is post, body: pollName, optionsNames, userId
-    fetch("/api/poll", {
+    fetch(ENV.API_URL + "/poll", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,6 +97,7 @@ export default function Landing(props) {
         pollName,
         optionNames,
       }),
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -123,19 +124,27 @@ export default function Landing(props) {
         }}
       />
     );
-    async function logout(){
-      await fetch('/api/logout',{
-        method:'POST',
-      });
-    history.push('/');
-    };
+
+  async function logout() {
+    await fetch(ENV.API_URL + "/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    history.push("/");
+  }
 
   return (
     <div id="landingPage">
       <div id="pollCreator">
         <h1>Create Poll</h1>
         <div>
-          <Button onClick = {()=>{logout()}}>Log Out</Button>
+          <Button
+            onClick={() => {
+              logout();
+            }}
+          >
+            Log Out
+          </Button>
         </div>
         <form>
           <Box m={2}>

@@ -1,5 +1,5 @@
 const server = require("../websocket.js");
-const pollController = require("../controllers/pollController.js");
+const { pollController } = require("../controllers");
 
 const connections = {};
 
@@ -19,7 +19,9 @@ server.use("subscribe", pollController.getInformation, (req, res) => {
   Object.keys(connections).forEach((id) => {
     const connEl = connections[id];
     if (connEl.conn === res.conn) {
-      res.conn.send(JSON.stringify({ type: "subscribe", data: { ...res.locals } }));
+      res.conn.send(
+        JSON.stringify({ type: "subscribe", data: { ...res.locals } })
+      );
     } else if (connEl.polls[req.pollId]) {
       connEl.conn.send(
         JSON.stringify({

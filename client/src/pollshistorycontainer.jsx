@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PollsHistoryDisplay from "./pollshistorydisplay.jsx";
+import * as ENV from "./env";
 
 export default function PollsHistoryContainer(props) {
   const [polls, setPolls] = useState([]);
   useEffect(() => {
-    fetch(`/api/poll/list/${props.userId}`)
+    fetch(ENV.API_URL + `/poll/list/${props.userId}`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => setPolls(data));
   }, []);
