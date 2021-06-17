@@ -40,10 +40,9 @@ export default function Login(props) {
       credentials: "include",
     })
       .then((response) => response.json())
-
       .then((data) => {
         console.log("new user signed up: ", data);
-        setRedirect(data);
+        history.push("/landing");
       })
       .catch((error) => {
         console.error("Error:", error);

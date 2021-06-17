@@ -22,6 +22,7 @@ pollController.getPolls = async (req, res, next) => {
   const id = req.params.id;
   const polls = await Poll.find({ joined: { $in: [id] } });
   res.locals.polls = polls;
+  // console.log(polls);
   return next();
 };
 
@@ -82,11 +83,15 @@ pollController.getInformation = async (req, res, next) => {
 
   if (!currPoll.active) next({ error: "poll has already been closed" });
 
-  currPoll.joined.push(req.userId);
-  await currPoll.save();
+  if (currPoll.joined.findIndex((id) => id === req.userId) === -1) {
+    currPoll.joined.push(req.userId);
+    await currPoll.save();
+  }
+
   res.locals = currPoll._doc;
 
   if (!req.guest) {
+    console.log(req.userId);
     const user = await User.findOne({ username: req.userId });
     if (!user) return next({ error: "couldnt find user name: " + req.userId });
     user.pollsList.push(currPoll._id);
@@ -105,14 +110,21 @@ pollController.addVote = async (req, res, next) => {
     });
 
   const vote = { userId: req.userId, vote: req.vote };
-  currPoll.responses.push({
-    userId: req.userId,
-    vote: req.vote,
-  });
-  currPoll.voteCount++;
-  await currPoll.save();
+  if (
+    currPoll.responses.findIndex(({ userId }) => userId === req.userId) === -1
+  ) {
+    currPoll.responses.push({
+      userId: req.userId,
+      vote: req.vote,
+    });
+    currPoll.voteCount++;
+    await currPoll.save();
+  }
 
-  res.locals = vote;
+  res.locals = {
+    vote,
+    voteCount: currPoll.voteCount,
+  };
   return next();
 
   // socketio.instance.to(room).emit(message)

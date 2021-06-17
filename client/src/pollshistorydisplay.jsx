@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
@@ -25,6 +25,7 @@ export default function PollsHistoryDisplay(props) {
   const classes = useStyles();
   const [style] = React.useState(modalStyle);
   const [open, setOpen] = useState(false);
+  const history = useHistory();
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,13 +46,11 @@ export default function PollsHistoryDisplay(props) {
     active,
   } = props;
 
-  console.log("responses", responses);
-  const responsesDisplay = responses.map((res) => (
-    <p>
+  const responsesDisplay = responses.map((res, i) => (
+    <p key={i}>
       {res.userId} voted for {res.vote}
     </p>
   ));
-  console.log("responsesDisplay", responsesDisplay);
 
   const body = (
     <div style={style} className={classes.paper}>

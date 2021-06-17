@@ -12,7 +12,6 @@ userController.createUser = async (req, res, next) => {
       throw Error("username already in use");
     }
 
-    console.log("req.body", req.body);
     const saltRounds = 10;
     const password = req.body.password;
     bcrypt.hash(password, saltRounds, async function (err, hash) {
@@ -41,7 +40,6 @@ userController.createUser = async (req, res, next) => {
 userController.verifyUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    console.log(req.body);
     //(find) checks for user with input username
     const user = await models.User.findOne({ username: username });
     if (!user) {

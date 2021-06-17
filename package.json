@@ -5,7 +5,7 @@
   "main": "./client/index.jsx",
   "scripts": {
     "dev": "NODE_ENV=development nodemon server/index.js",
-    "test": "NODE_ENV=development jest --verbose"
+    "test": "NODE_ENV=test jest --verbose"
   },
   "keywords": [
     "voting"

@@ -39,7 +39,8 @@ const Vote = (props) => {
           state.poll.joined.push(data.userId);
           setState({ ...state });
         } else if (type === "vote_update") {
-          state.vote.count++;
+          console.log(data);
+          state.vote.count = data.voteCount;
           state.poll.responses.push(data.vote);
 
           const data = await fetch(ENV.API_URL + "/poll/" + pollId);
@@ -49,7 +50,7 @@ const Vote = (props) => {
 
           setState({ ...state });
         } else if (type === "voted") {
-          state.vote.count++;
+          state.vote.count = data.voteCount;
           state.vote.voted = true;
           state.poll.responses.push(data.vote);
           setState({ ...state });
@@ -87,12 +88,12 @@ const Vote = (props) => {
 
   const pollOptions = state.poll.options.map((opt, i) => {
     return (
-      <div>
+      <div key={i}>
         <FormControlLabel
           className="optionsLabel"
           key={`optKey${i}`}
           value={`${i}`}
-          disabled={state.vote.voted !== false ? true : false}
+          disabled={state.vote.voted || state.poll.voted}
           control={<Radio />}
           label={opt}
         />
@@ -120,11 +121,17 @@ const Vote = (props) => {
     if (found) {
       // if they have, add div that says so
       voteParticipants.push(
-        <div className="participantDiv">{`${state.poll.joined[i]} has voted`}</div>
+        <div
+          key={i}
+          className="participantDiv"
+        >{`${state.poll.joined[i]} has voted`}</div>
       );
     } else {
       voteParticipants.push(
-        <div className="participantDiv">{`${state.poll.joined[i]}`}</div>
+        <div
+          key={i}
+          className="participantDiv"
+        >{`${state.poll.joined[i]}`}</div>
       );
     }
   }
@@ -134,7 +141,7 @@ const Vote = (props) => {
       <h1>{state.poll.question}</h1>
       <div className="voteRow">
         <Box mb={3}>
-          <FormControl component="voteOptionsForm">
+          <FormControl>
             <RadioGroup
               className="votingGroup"
               name="voteRadioGroup"
@@ -164,9 +171,11 @@ const Vote = (props) => {
             }}
             // disabled={!validateForm()}
             variant="outlined"
-            disabled={state.vote.voted || selected < 0}
+            disabled={state.vote.voted || state.poll.voted || selected < 0}
           >
-            Vote
+            {state.vote.voted || state.poll.voted
+              ? "You have already voted"
+              : "Vote"}
           </Button>
           <Button
             onClick={() => {

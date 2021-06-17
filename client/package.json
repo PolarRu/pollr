@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=development jest --verbose",
     "build": "webpack",
-    "dev": "webpack serve"
+    "dev": "NODE_ENV=development webpack serve"
   },
   "author": "",
   "license": "ISC",

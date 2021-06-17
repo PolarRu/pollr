@@ -107,13 +107,10 @@ app.use((err, req, res, next) => {
 
 const runServer = async () => {
   console.log("environment:", NODE_ENV);
-  await mongoose.connect(
-    NODE_ENV === "development" ? MONGO_TEST_URI : MONGO_URI,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  );
+  await mongoose.connect(NODE_ENV === "test" ? MONGO_TEST_URI : MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
   const server = app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`);
@@ -124,10 +121,6 @@ const runServer = async () => {
   return async () => {
     server.close();
     return WSServer.socket.close();
-    // return new Promise(resolve => WSServer.socket.close(() => {
-    //   console.log('closing websockets')
-    //   resolve();
-    // }));
   };
 };
 

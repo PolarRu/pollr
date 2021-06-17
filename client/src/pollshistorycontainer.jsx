@@ -14,7 +14,7 @@ export default function PollsHistoryContainer(props) {
   }, [props.userId]);
 
   const pollsDisplay = [];
-  console.log("polls", polls);
+
   for (let i = 0; i < polls.length; i++) {
     const {
       method,
@@ -40,7 +40,6 @@ export default function PollsHistoryContainer(props) {
       />
     );
   }
-  console.log("pollsDisplay", pollsDisplay);
 
   return (
     <div id="pollsHistoryContainer">

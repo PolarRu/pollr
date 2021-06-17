@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
-import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
@@ -47,21 +47,19 @@ export default function Landing(props) {
     // create delete icon for all options if there are more than 2 options
     let deleteIcon = totalOptions > 2 ? true : false;
     optionsArray.push(
-      <Box m={2} key={i}>
-        <span>
-          <TextField
-            key={`OptionText${i}`}
-            type="text"
-            value={optionNames[`${i}`]}
-            onChange={(e) => {
-              let newOptions = [...optionNames];
-              newOptions[`${i}`] = e.target.value;
-              setOptionNames(newOptions);
-            }}
-            label={`Option ${i + 1}`}
-            variant="outlined"
-          />
-        </span>
+      <div key={i} style={{ width: "100%", display: "flex" }}>
+        <TextField
+          key={`OptionText${i}`}
+          type="text"
+          value={optionNames[`${i}`]}
+          onChange={(e) => {
+            let newOptions = [...optionNames];
+            newOptions[`${i}`] = e.target.value;
+            setOptionNames(newOptions);
+          }}
+          label={`Option ${i + 1}`}
+          variant="outlined"
+        />
         {deleteIcon && (
           <span>
             <Tooltip title="Delete Poll Option">
@@ -74,14 +72,14 @@ export default function Landing(props) {
                   setOptionNames(newOptions);
                 }}
                 // remove delete icon from tab selection cycle
-                tabindex="-1"
+                tabIndex="-1"
               >
-                <DeleteIcon />
+                <CloseIcon />
               </IconButton>
             </Tooltip>
           </span>
         )}
-      </Box>
+      </div>
     );
   }
 
@@ -130,7 +128,7 @@ export default function Landing(props) {
             Log Out
           </Button>
         </div>
-        <form>
+        <div>
           <Box m={2}>
             <div>
               <TextField
@@ -162,7 +160,7 @@ export default function Landing(props) {
           >
             Start Poll
           </Button>
-        </form>
+        </div>
       </div>
       <PollsHistoryContainer userId={props.userId} />
     </div>

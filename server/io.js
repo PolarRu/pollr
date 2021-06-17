@@ -7,7 +7,7 @@ class SocketIo {
     SocketIo.instance = socketIo(server, {
       cors: {
         origin: "*",
-        methods: ["GET", "POST"],
+        // methods: ["GET", "POST"],
       },
     });
   }
@@ -21,7 +21,7 @@ class SocketIo {
       console.log(client.id, "has connected");
 
       client.on("joinPoll", (pollId) => {
-        console.log("joined", pollId);
+        console.log(client.id, "has joined", pollId);
         client.join(pollId);
       });
 

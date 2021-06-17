@@ -5,6 +5,7 @@ const connections = {};
 
 server.use("subscribe", pollController.getInformation, (req, res) => {
   const userId = req.userId;
+  console.log(res.locals);
   if (!connections[userId]) {
     connections[userId] = {
       conn: res.conn,
@@ -19,8 +20,12 @@ server.use("subscribe", pollController.getInformation, (req, res) => {
   Object.keys(connections).forEach((id) => {
     const connEl = connections[id];
     if (connEl.conn === res.conn) {
+      const voted =
+        res.locals.responses.findIndex(
+          ({ userId }) => userId === req.userId
+        ) !== -1;
       res.conn.send(
-        JSON.stringify({ type: "subscribe", data: { ...res.locals } })
+        JSON.stringify({ type: "subscribe", data: { ...res.locals, voted } })
       );
     } else if (connEl.polls[req.pollId]) {
       connEl.conn.send(
@@ -38,17 +43,24 @@ server.use("vote", pollController.addVote, (req, res) => {
   Object.keys(connections).forEach((id) => {
     const connEl = connections[id];
     if (connEl.conn === res.conn) {
+      console.log(res.locals);
       res.conn.send(
         JSON.stringify({
           type: "voted",
-          data: { pollId: req.pollId, vote: res.locals },
+          data: {
+            pollId: req.pollId,
+            ...res.locals,
+          },
         })
       );
     } else if (connEl.polls[req.pollId]) {
       connEl.conn.send(
         JSON.stringify({
           type: "vote_update",
-          data: { pollId: req.pollId, vote: res.locals },
+          data: {
+            pollId: req.pollId,
+            ...res.locals,
+          },
         })
       );
     }
