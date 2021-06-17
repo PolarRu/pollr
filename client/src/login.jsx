@@ -17,8 +17,11 @@ const useStyles = makeStyles({
       fontSize: 20,
       // display: flex,
       // align-items: center
-    // justify-content: space-around;
+      // justifyContent: 'left',
     backgroundColor: 'white',
+    // margin: auto,
+    // padding:10
+    marginLeft: 25
       
     },
 });

@@ -42,23 +42,29 @@ const Chatbox = (props) => {
   }
 
   return (
-    <div>
-      <div>{`Poll Link:   http://localhost:3000/poll/${
+    <div >
+      <div className= "pollLink">{`Poll Link:   http://localhost:3000/poll/${
         props.pollId || 1
-      }`}</div>
+        }`}</div>
+      <div id="chatBox">
+        <div className="messages">
       <Box>{messages}</Box>
+      </div>
       <TextField
         id={"inputText"}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       ></TextField>
+      <div className="sendMessage">
       <Button
         onClick={() => {
           onClick();
         }}
       >
-        send message
+          send message
       </Button>
+        </div>
+        </div>
     </div>
   );
 };

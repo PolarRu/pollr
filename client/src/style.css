@@ -48,6 +48,48 @@ body {
   width: 80%;
   /* background-color: #fff; */
 }
+.options {
+  margin-left: 20px;
+}
+.pollOption {
+  margin-left: 20px;
+}
+.add {
+  margin-left: 100px;
+  text-decoration: solid;
+  font-weight: bolder;
+  font-size: 80px;
+}
+.startPoll {
+  margin-top: 20px;
+  margin-left: 70px;
+  cursor: pointer;
+  color:rgb(7, 6, 6)
+  
+}
+.logout {
+  margin-top: 20px;
+  margin-left: 80px;
+  border: none;
+  display: inline-block;
+  box-shadow: 0 0 10px grey;
+  font-weight: bolder;
+  text-decoration: solid;
+  padding: 10px;
+  align-self: center;
+  cursor: pointer;
+}
+.moreInfo {
+  margin-left: 140px;
+  border: none;
+  display: inline-block;
+  box-shadow: 0 0 10px grey;
+  padding: 10px;
+  align-self: center;
+  cursor: pointer;
+  color:black
+  
+}
 
 #pollsHistoryContainer {
   max-height: 50vh;
@@ -58,7 +100,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  color:rgb(7, 6, 6);
   border-radius: 8px;
   box-shadow: 0 0 10px grey;
   width: 360px;
@@ -131,4 +173,43 @@ body {
 
 .pollsHistoryDisplayContents {
   margin: 20px 20px;
+}
+
+.pollLink {
+  margin-top: 20px;
+  text-decoration: underline;
+  font-weight: bold;
+  margin-left: 30px;
+}
+.sendMessage {
+ 
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  border: none;
+  display: inline-block;
+  box-shadow: 0 0 10px grey;
+  padding: 10px;
+  align-self: center;
+  cursor: pointer;
+  color:black
+ 
+} 
+ #chatBox {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 6px black;
+  width: 400px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 6px black;
+  width: 365px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
 }

@@ -138,8 +138,8 @@ const Vote = (props) => {
           </FormControl>
         </Box>
         <div className="participantContainer">
-          <p>{state.vote.count} votes counted</p>
-          <p>Poll participants:</p>
+          <p><b>{state.vote.count} </b>votes counted</p>
+          <p><b>Poll participants:</b></p>
           {voteParticipants}
         </div>
         {props.admin && <div className="linkContainer"></div>}
@@ -158,7 +158,7 @@ const Vote = (props) => {
           variant="contained"
           disabled={state.vote.voted || selected < 0}
         >
-          Vote
+          <b>Vote</b>
         </Button>
 
         {props.admin && (
@@ -173,7 +173,7 @@ const Vote = (props) => {
             // disabled={!validateForm()}
             variant="contained"
           >
-            Close Poll
+            <b>Close Poll</b>
           </Button>
         )}
       </div>
