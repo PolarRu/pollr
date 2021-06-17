@@ -42,6 +42,7 @@ export default function PollsHistoryDisplay(props) {
     active,
   } = props;
   console.log("responses", responses);
+  
   const responsesDisplay = responses.map((res) => (
     <p>
       {res.userId} voted for {res.vote}
@@ -66,11 +67,13 @@ export default function PollsHistoryDisplay(props) {
     <div className="pollsHistoryDisplay">
       <div className="pollsHistoryDisplayContents">
         <h3>{question}</h3>
-        <h4>
-          {winner.option} was the most voted for choice with
+        <p>
+          {winner.option} was the most voted for choice with 
           {winner.count} votes
-        </h4>
-        <Button onClick={handleOpen}>More Info</Button>
+        </p>
+        <div className="moreInfo">
+          <Button onClick={handleOpen}>More Info</Button>
+          </div>
         <Modal className="modal" open={open} onClose={handleClose}>
           {body}
         </Modal>

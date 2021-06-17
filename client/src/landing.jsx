@@ -48,6 +48,7 @@ export default function Landing(props) {
     let deleteIcon = totalOptions > 2 ? true : false;
     optionsArray.push(
       <Box m={2}>
+        <div className="options">
         <span>
           <TextField
             key={`OptionText${i}`}
@@ -61,7 +62,8 @@ export default function Landing(props) {
             label={`Option ${i + 1}`}
             variant="outlined"
           />
-        </span>
+          </span>
+          </div>
         {deleteIcon && (
           <span>
             <Tooltip title="Delete Poll Option">
@@ -137,7 +139,7 @@ export default function Landing(props) {
     <div id="landingPage">
       <div id="pollCreator">
         <h1>Create Poll</h1>
-        <div>
+        {/* <div>
           <Button
             onClick={() => {
               logout();
@@ -145,10 +147,10 @@ export default function Landing(props) {
           >
             Log Out
           </Button>
-        </div>
+        </div> */}
         <form>
           <Box m={2}>
-            <div>
+            <div className="pollOption">
               <TextField
                 id="pollname"
                 onSubmit={handleSubmit}
@@ -156,31 +158,43 @@ export default function Landing(props) {
                 value={pollName}
                 onChange={(e) => setPollName(e.target.value)}
                 label="Poll Name"
-                variant="outlined"
-              />
+                variant="outlined"/>
             </div>
           </Box>
           {[optionsArray]}
-          <div>
+          <div className="add">
             <Button
               onClick={() => {
                 setTotalOptions((totalOptions += 1));
               }}
               variant="outlined"
             >
-              +
+              <b>+</b>
             </Button>
           </div>
+          <div className="startPoll">
           <Button
+            
             onClick={() => createPoll()}
             disabled={!validateForm()}
             variant="contained"
           >
-            Start Poll
+             <b>Start Poll</b> 
           </Button>
+          </div>
+          <div className="logout">
+          <Button
+            onClick={() => {
+              logout();
+            }}
+          >
+            <b>Log Out</b>
+          </Button>
+        </div>
         </form>
       </div>
       <PollsHistoryContainer userId={props.location.state.userId} />
     </div>
+    
   );
 }

@@ -6,13 +6,28 @@ import Box from "@material-ui/core/Box";
 import { Redirect } from "react-router-dom";
 import GuestLogIn from "./guestlogin.jsx";
 import * as ENV from "./env";
-
+import { makeStyles } from "@material-ui/core"
 /*
 Login page allows user to log in, or allows them to
 navigate to the sign up page
 */
 
+const useStyles = makeStyles({
+    btn: {
+      fontSize: 20,
+      // display: flex,
+      // align-items: center
+      // justifyContent: 'left',
+    backgroundColor: 'white',
+    // margin: auto,
+    // padding:10
+    marginLeft: 25
+      
+    },
+});
+
 export default function Login(props) {
+  const classes = useStyles()
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -122,6 +137,7 @@ export default function Login(props) {
         <div>
           <div>
             <Button
+              className = {classes.btn}
               onClick={() => {
                 if (validateForm() /*&& account exists in DB */) {
                   if (isLogin) {
@@ -144,8 +160,9 @@ export default function Login(props) {
               onClick={() => setIsLogin(!isLogin)}
               // disabled={!validateForm()}
               variant="contained"
-            >
-              {isLogin ? "Create an account" : "Already have an account?"}
+            > <u>
+                {isLogin ? "Create an account" : "Already have an account?"}
+                </u>
             </p>
           </div>
         </div>
