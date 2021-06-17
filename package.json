@@ -4,8 +4,8 @@
   "description": "A decision-making app using ranked choice voting",
   "main": "./client/index.jsx",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon server/index.js",
-    "test": "NODE_ENV=development jest --verbose"
+    "dev": "NODE_ENV=development nodemon --ignore ./client/ server/index.js",
+    "test": "NODE_ENV=test jest --verbose"
   },
   "keywords": [
     "voting"

@@ -8,19 +8,19 @@ sessionController.createSession = async (req, res, next) => {
     const existingSession = await Session.findOne({
       sessionId: res.locals.id,
     });
-    console.log("res.locals.userId: ", res.locals.userId);
-    console.log("existing session: ", existingSession ? true : false);
+    // console.log("res.locals.userId: ", res.locals.userId);
+    // console.log("existing session: ", existingSession ? true : false);
     if (existingSession) {
       res.locals.userId = existingSession.userId;
       return next();
     }
-    console.log(res.locals);
+
     const session = {
       sessionId: res.locals.id,
       userId: res.locals.userId,
     };
     await Session.create(session);
-    console.log("created session: ", session.sessionId);
+    // console.log("created session: ", session.sessionId);
     next();
   } catch (err) {
     next({
@@ -33,7 +33,6 @@ sessionController.createSession = async (req, res, next) => {
 sessionController.isLoggedIn = async (req, res, next) => {
   //find a session with sessionId of req.cookies
   try {
-    console.log("cookies: ", req.cookies);
     if (!req.cookies.ssid) return next();
     const session = await Session.findOne({ sessionId: req.cookies.ssid });
     if (session) {

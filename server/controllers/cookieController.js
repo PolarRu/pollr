@@ -6,13 +6,7 @@ const cookieController = {};
 cookieController.createCookie = (req, res, next) => {
   try {
     if (res.locals.id) {
-      console.log("Set cookie: ", res.locals.id);
-      res.cookie("ssid", res.locals.id, {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-        path: "*",
-      });
+      res.cookie("ssid", res.locals.id);
     }
     next();
   } catch (err) {
@@ -22,6 +16,7 @@ cookieController.createCookie = (req, res, next) => {
     });
   }
 };
+
 cookieController.deleteCookie = (req, res, next) => {
   try {
     res.clearCookie("ssid");

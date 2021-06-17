@@ -84,6 +84,7 @@ const dispatcher = (req, res, ...route) => {
   if (route[0])
     route[0](req, res, (error) => {
       if (error) {
+        console.log(error);
         res.conn.send(JSON.stringify({ type: "error", data: { error } }));
       } else {
         dispatcher(req, res, ...route.slice(1));

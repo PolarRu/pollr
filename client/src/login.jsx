@@ -3,35 +3,35 @@ import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
-import { Redirect } from "react-router-dom";
-import GuestLogIn from "./guestlogin.jsx";
+import { useHistory } from "react-router-dom";
+// import GuestLogIn from "./guestlogin.jsx";
 import * as ENV from "./env";
-import { makeStyles } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core";
 /*
 Login page allows user to log in, or allows them to
 navigate to the sign up page
 */
 
 const useStyles = makeStyles({
-    btn: {
-      fontSize: 20,
-      // display: flex,
-      // align-items: center
-      // justifyContent: 'left',
-    backgroundColor: 'white',
+  btn: {
+    fontSize: 20,
+    // display: flex,
+    // align-items: center
+    // justifyContent: 'left',
+    backgroundColor: "white",
     // margin: auto,
     // padding:10
-    marginLeft: 25
-      
-    },
+    marginLeft: 25,
+  },
 });
 
 export default function Login(props) {
-  const classes = useStyles()
+  const classes = useStyles();
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(null);
+  const history = useHistory();
 
   // form validation; username and password need to be > one char
   function validateForm() {
@@ -54,10 +54,10 @@ export default function Login(props) {
       credentials: "include",
     })
       .then((response) => response.json())
-
       .then((data) => {
         console.log("new user signed up: ", data);
-        setRedirect(data);
+        props.updateUser(data.userId);
+        history.push("/landing");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -74,38 +74,21 @@ export default function Login(props) {
       body: JSON.stringify({ username, password }),
       credentials: "include",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status != 200) {
+          throw Error();
+        }
+        return response.json();
+      })
       .then((data) => {
-        console.log("new user logged in: ", data);
-        setRedirect(data);
+        //if(data.noUser) return signUp();
+        props.updateUser(data.userId);
+        history.push(`/landing`);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-
-  // check if redirect has data attached, if so, redirect to path provided in redirect.tabs
-  if (redirect) {
-    console.log(redirect.tabs);
-    if (props.match.params.pollId) {
-      return (
-        <Redirect
-          to={{
-            pathname: `/vote`, // '/vote'
-            state: { pollId: props.match.params.pollId, userId: username }, //'pollid, userid
-          }}
-        />
-      );
-    }
-    return (
-      <Redirect
-        to={{
-          pathname: redirect.tabs,
-          state: { userId: username },
-        }}
-      />
-    );
-  }
 
   return (
     <div>
@@ -137,13 +120,12 @@ export default function Login(props) {
         <div>
           <div>
             <Button
-              className = {classes.btn}
+              className={classes.btn}
               onClick={() => {
-                if (validateForm() /*&& account exists in DB */) {
+                if (validateForm()) {
                   if (isLogin) {
                     return login();
                   }
-
                   return signUp();
                 }
                 return;
@@ -160,14 +142,16 @@ export default function Login(props) {
               onClick={() => setIsLogin(!isLogin)}
               // disabled={!validateForm()}
               variant="contained"
-            > <u>
+            >
+              {" "}
+              <u>
                 {isLogin ? "Create an account" : "Already have an account?"}
-                </u>
+              </u>
             </p>
           </div>
         </div>
       </form>
-      {props.location.state.pollId && <GuestLogIn {...props} />}
+      {/* {props.location.state.pollId && <GuestLogIn {...props} />} */}
     </div>
   );
 }

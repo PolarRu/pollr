@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=development jest --verbose",
     "build": "webpack",
-    "dev": "webpack serve"
+    "dev": "NODE_ENV=development webpack serve"
   },
   "author": "",
   "license": "ISC",
@@ -34,11 +34,13 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
+    "emoji-picker-react": "^3.4.8",
     "qs": "^6.7.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
+    "recharts": "^2.0.9",
     "redux": "^4.1.0",
     "regenerator-runtime": "^0.13.7",
     "socket.io-client": "^4.1.2"

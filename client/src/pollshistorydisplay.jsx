@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 
 const modalStyle = {
@@ -24,6 +24,8 @@ export default function PollsHistoryDisplay(props) {
   const classes = useStyles();
   const [style] = React.useState(modalStyle);
   const [open, setOpen] = useState(false);
+  const history = useHistory();
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -31,6 +33,7 @@ export default function PollsHistoryDisplay(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
   const {
     method,
     question,
@@ -42,13 +45,13 @@ export default function PollsHistoryDisplay(props) {
     active,
   } = props;
   console.log("responses", responses);
-  
-  const responsesDisplay = responses.map((res) => (
-    <p>
+
+  const responsesDisplay = responses.map((res, i) => (
+    <p key={i}>
       {res.userId} voted for {res.vote}
     </p>
   ));
-  console.log("responsesDisplay", responsesDisplay);
+
   const body = (
     <div style={style} className={classes.paper}>
       <h2>Poll #{pollId}</h2>
@@ -63,20 +66,23 @@ export default function PollsHistoryDisplay(props) {
       <p>This is a(n) {active ? "open" : "closed"} poll</p>
     </div>
   );
+
   return (
     <div className="pollsHistoryDisplay">
       <div className="pollsHistoryDisplayContents">
         <h3>{question}</h3>
         <p>
-          {winner.option} was the most voted for choice with 
-          {winner.count} votes
+          {winner.option} was the most voted for choice with
+          {(" "+winner.count)} votes
         </p>
-        <div className="moreInfo">
-          <Button onClick={handleOpen}>More Info</Button>
-          </div>
-        <Modal className="modal" open={open} onClose={handleClose}>
-          {body}
-        </Modal>
+        <Button
+          onClick={() => {
+            history.push(`/poll/${props.pollId}`);
+          }}
+          variant="contained"
+        >
+          Take me to this poll
+        </Button>
       </div>
     </div>
   );
