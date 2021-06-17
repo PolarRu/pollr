@@ -25,6 +25,19 @@ pollController.getPolls = async (req, res, next) => {
   return next();
 };
 
+pollController.getPoll = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const poll = await Poll.findOne({ pollId: id });
+    res.locals.poll = poll;
+    if (!poll) return res.status(400).send("cannot find id");
+    return next();
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+};
+
 pollController.createPoll = async (req, res, next) => {
   try {
     console.log(req.body);

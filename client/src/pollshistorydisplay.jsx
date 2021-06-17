@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
@@ -24,6 +25,7 @@ export default function PollsHistoryDisplay(props) {
   const classes = useStyles();
   const [style] = React.useState(modalStyle);
   const [open, setOpen] = useState(false);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -31,6 +33,7 @@ export default function PollsHistoryDisplay(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
   const {
     method,
     question,
@@ -41,6 +44,7 @@ export default function PollsHistoryDisplay(props) {
     winner,
     active,
   } = props;
+
   console.log("responses", responses);
   const responsesDisplay = responses.map((res) => (
     <p>
@@ -48,6 +52,7 @@ export default function PollsHistoryDisplay(props) {
     </p>
   ));
   console.log("responsesDisplay", responsesDisplay);
+
   const body = (
     <div style={style} className={classes.paper}>
       <h2>Poll #{pollId}</h2>
@@ -62,6 +67,7 @@ export default function PollsHistoryDisplay(props) {
       <p>This is a(n) {active ? "open" : "closed"} poll</p>
     </div>
   );
+
   return (
     <div className="pollsHistoryDisplay">
       <div className="pollsHistoryDisplayContents">
@@ -70,10 +76,13 @@ export default function PollsHistoryDisplay(props) {
           {winner.option} was the most voted for choice with
           {winner.count} votes
         </h4>
-        <Button onClick={handleOpen}>More Info</Button>
-        <Modal className="modal" open={open} onClose={handleClose}>
-          {body}
-        </Modal>
+        <Button
+          onClick={() => {
+            history.push(`/poll/${props.pollId}`);
+          }}
+        >
+          Take me to this poll
+        </Button>
       </div>
     </div>
   );

@@ -4,13 +4,15 @@ import * as ENV from "./env";
 
 export default function PollsHistoryContainer(props) {
   const [polls, setPolls] = useState([]);
+
   useEffect(() => {
     fetch(ENV.API_URL + `/poll/list/${props.userId}`, {
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => setPolls(data));
-  }, []);
+  }, [props.userId]);
+
   const pollsDisplay = [];
   console.log("polls", polls);
   for (let i = 0; i < polls.length; i++) {
@@ -26,6 +28,7 @@ export default function PollsHistoryContainer(props) {
     } = polls[i];
     pollsDisplay.push(
       <PollsHistoryDisplay
+        key={pollId}
         method={method}
         question={question}
         creatorId={creatorId}

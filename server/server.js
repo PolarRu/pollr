@@ -62,7 +62,7 @@ app.post(
       //redirect user in verifUser here
       res.status(200).json({ tabs: "/landing", userId: res.locals.userId });
     } else {
-      res.status(200).redirect("/logout");
+      res.status(200).json({ tabs: "/logout" });
     }
   }
 );

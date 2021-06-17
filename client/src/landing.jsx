@@ -6,7 +6,7 @@ import Box from "@material-ui/core/Box";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import PollsHistoryContainer from "./pollshistorycontainer.jsx";
 import * as ENV from "./env";
 
@@ -47,7 +47,7 @@ export default function Landing(props) {
     // create delete icon for all options if there are more than 2 options
     let deleteIcon = totalOptions > 2 ? true : false;
     optionsArray.push(
-      <Box m={2}>
+      <Box m={2} key={i}>
         <span>
           <TextField
             key={`OptionText${i}`}
@@ -93,7 +93,7 @@ export default function Landing(props) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: props.location.state.userId,
+        userId: props.userId,
         pollName,
         optionNames,
       }),
@@ -102,35 +102,19 @@ export default function Landing(props) {
       .then((response) => response.json())
       .then((data) => {
         console.log("Created poll: ", data);
-        setRedirect(data);
+        history.push(`/poll/${data.pollId}`);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  if (redirect)
-    return (
-      <Redirect
-        to={{
-          pathname: "/vote",
-          state: {
-            userId: props.location.state.userId,
-            pollId: redirect.pollId,
-            pollLink: redirect.link,
-            admin: redirect.admin,
-            guest: false,
-          },
-        }}
-      />
-    );
-
   async function logout() {
     await fetch(ENV.API_URL + "/logout", {
       method: "POST",
       credentials: "include",
     });
-    history.push("/");
+    history.push("/login");
   }
 
   return (
@@ -180,7 +164,7 @@ export default function Landing(props) {
           </Button>
         </form>
       </div>
-      <PollsHistoryContainer userId={props.location.state.userId} />
+      <PollsHistoryContainer userId={props.userId} />
     </div>
   );
 }

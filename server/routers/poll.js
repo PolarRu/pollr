@@ -12,12 +12,8 @@ router.post("/", pollController.createPoll, (req, res) => {
   res.status(200).json(res.locals);
 });
 
-router.get("/:id", (req, res) => {
-  if (req.params.id === "style.css") {
-    res.status(200).sendFile(path.join(__dirname, "../../style.css"));
-  } else {
-    res.status(200).sendFile(path.join(__dirname, "../../index.html"));
-  }
+router.get("/:id", pollController.getPoll, (req, res) => {
+  res.status(200).json(res.locals.poll);
 });
 
 module.exports = router;
