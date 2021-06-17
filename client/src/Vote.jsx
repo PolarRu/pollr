@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import ChatBox from "./Chatbox";
 
 import {
   Button,
@@ -123,60 +124,79 @@ const Vote = (props) => {
   }
 
   return (
-    <div className="voteContainer">
-      <h1>{state.poll.question}</h1>
-      <div className="voteRow">
-        <Box mb={3}>
-          <FormControl component="voteOptionsForm">
-            <RadioGroup
-              className="votingGroup"
-              name="voteRadioGroup"
-              onChange={(e) => setSelected(e.target.value)}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+         }}
+    >
+      <div style={{ display: "flex" }}>
+        <div className="voteContainer">
+          <h1>{state.poll.question}</h1>
+          <div className="voteRow">
+            <Box mb={3}>
+              <FormControl component="voteOptionsForm">
+                <RadioGroup
+                  className="votingGroup"
+                  name="voteRadioGroup"
+                  onChange={(e) => setSelected(e.target.value)}
+                >
+                  {pollOptions}
+                </RadioGroup>
+              </FormControl>
+            </Box>
+            <div className="participantContainer" style={{ padding: "1rem" }}>
+              <p>
+                <b>{state.vote.count} </b>votes counted
+              </p>
+              <p>
+                <b>Participants:</b>
+              </p>
+              {voteParticipants}
+            </div>
+            {props.admin && <div className="linkContainer"></div>}
+          </div>
+          <div className="buttonDivLogin">
+            <Button
+              onClick={() => {
+                pollSocket.sendEvent("vote", {
+                  userId: props.userId,
+                  pollId: props.pollId,
+                  vote: selected,
+                  guest: props.guest,
+                });
+              }}
+              // disabled={!validateForm()}
+              variant="contained"
+              disabled={state.vote.voted || selected < 0}
             >
-              {pollOptions}
-            </RadioGroup>
-          </FormControl>
-        </Box>
-        <div className="participantContainer">
-          <p><b>{state.vote.count} </b>votes counted</p>
-          <p><b>Poll participants:</b></p>
-          {voteParticipants}
-        </div>
-        {props.admin && <div className="linkContainer"></div>}
-      </div>
-      <div className="buttonDivLogin">
-        <Button
-          onClick={() => {
-            pollSocket.sendEvent("vote", {
-              userId: props.userId,
-              pollId: props.pollId,
-              vote: selected,
-              guest: props.guest,
-            });
-          }}
-          // disabled={!validateForm()}
-          variant="contained"
-          disabled={state.vote.voted || selected < 0}
-        >
-          <b>Vote</b>
-        </Button>
+              <b>Vote</b>
+            </Button>
 
-        {props.admin && (
-          <Button
-            onClick={() => {
-              pollSocket.sendEvent("close_poll", {
-                userId: props.userId,
-                pollId: props.pollId,
-              });
-              history.push("/landing");
-            }}
-            // disabled={!validateForm()}
-            variant="contained"
-          >
-            <b>Close Poll</b>
-          </Button>
-        )}
+            {props.admin && (
+              <Button
+                onClick={() => {
+                  pollSocket.sendEvent("close_poll", {
+                    userId: props.userId,
+                    pollId: props.pollId,
+                  });
+                  history.push("/landing");
+                }}
+                // disabled={!validateForm()}
+                variant="contained"
+              >
+                <b>Close Poll</b>
+              </Button>
+            )}
+          </div>
+        </div>
+        <div style={{ marginLeft: "1rem" }}></div>
+        <ChatBox {...props} />
       </div>
+      <div className="pollLink">{`Poll Link:   http://localhost:3000/poll/${
+        props.pollId || 1
+      }`}</div>
     </div>
   );
 };

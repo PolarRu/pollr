@@ -202,6 +202,8 @@ body {
   width: 400px;
   margin-bottom: 30px;
   margin-top: 30px;
+  max-height: 60vh;
+  
 }
 
 .messages {
@@ -212,4 +214,5 @@ body {
   margin-bottom: 20px;
   margin-top: 20px;
   margin-left: 20px;
+  overflow-y: scroll ;
 }

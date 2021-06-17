@@ -13,7 +13,7 @@ export default function App() {
   return (
     <main id="app">
       <Switch>
-        <Route path="/test" render={(props) => <ChatBox {...props} />} exact />
+        {/* <Route path="/test" render={(props) => <ChatBox {...props} />} exact /> */}
         <Route path="/" render={(props) => <Session {...props} />} exact />
         <Route path="/login" render={(props) => <Login {...props} />} exact />
         <Route
@@ -25,7 +25,7 @@ export default function App() {
           path="/vote"
           render={(props) => (
             <div>
-              <Vote {...props} /> <ChatBox {...props} />
+              <Vote {...props} /> 
             </div>
           )}
           exact

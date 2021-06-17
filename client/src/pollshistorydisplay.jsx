@@ -42,6 +42,7 @@ export default function PollsHistoryDisplay(props) {
     active,
   } = props;
   console.log("responses", responses);
+  
   const responsesDisplay = responses.map((res) => (
     <p>
       {res.userId} voted for {res.vote}
