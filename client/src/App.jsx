@@ -65,7 +65,7 @@ export default function App() {
           render={(props) => (
             <div>
               <Vote {...props} userId={userId} />{" "}
-              <ChatBox pollId={props.match.params.pollId} />
+              {/* <ChatBox pollId={props.match.params.pollId} /> */}
             </div>
           )}
           exact

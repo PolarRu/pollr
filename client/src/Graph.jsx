@@ -59,7 +59,7 @@ const Graph = (props) => {
     },
   ];
   return (
-    <div style={{ height: "50vh" }}>
+    <div style={{ height: "50vh", width: "30vw" }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart width={150} height={40} data={data}>
           <Bar dataKey="uv" fill="#8884d8" />

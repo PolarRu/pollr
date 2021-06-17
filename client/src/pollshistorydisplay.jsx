@@ -45,6 +45,7 @@ export default function PollsHistoryDisplay(props) {
     winner,
     active,
   } = props;
+  console.log("responses", responses);
 
   const responsesDisplay = responses.map((res, i) => (
     <p key={i}>
@@ -71,14 +72,15 @@ export default function PollsHistoryDisplay(props) {
     <div className="pollsHistoryDisplay">
       <div className="pollsHistoryDisplayContents">
         <h3>{question}</h3>
-        <h4>
+        <p>
           {winner.option} was the most voted for choice with
           {winner.count} votes
-        </h4>
+        </p>
         <Button
           onClick={() => {
             history.push(`/poll/${props.pollId}`);
           }}
+          variant="contained"
         >
           Take me to this poll
         </Button>

@@ -1,17 +1,8 @@
 import React, { useState, useEffect, useRef, PureComponent } from "react";
 import { useHistory } from "react-router-dom";
 import Graph from "./Graph.jsx";
-// import {
-//   BarChart,
-//   Bar,
-//   Cell,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-//   Tooltip,
-//   Legend,
-//   ResponsiveContainer,
-// } from "recharts";
+import ChatBox from "./Chatbox";
+
 import {
   Button,
   Box,
@@ -22,8 +13,6 @@ import {
 } from "@material-ui/core";
 import pollSocket from "./PollSocket.js";
 import * as ENV from "./env";
-
-import ChatBox from "./Chatbox";
 
 const randomID = Math.floor(Math.random() * 1000000);
 
@@ -152,74 +141,145 @@ const Vote = (props) => {
   }
 
   return (
-    <div>
-      <div className="voteContainer">
-        <h1>{state.poll.question}</h1>
-        <div className="voteRow">
-          <Box mb={3}>
-            <FormControl>
-              <RadioGroup
-                className="votingGroup"
-                name="voteRadioGroup"
-                onChange={(e) => setSelected(e.target.value)}
-              >
-                {pollOptions}
-              </RadioGroup>
-            </FormControl>
-          </Box>
-          <div className="participantContainer">
-            <p>{state.vote.count} votes counted</p>
-            <p>Poll participants:</p>
-            {voteParticipants}
+    // <div>
+    //   <div className="voteContainer">
+    //     <h1>{state.poll.question}</h1>
+    //     <div className="voteRow">
+    //       <Box mb={3}>
+    //         <FormControl>
+    //           <RadioGroup
+    //             className="votingGroup"
+    //             name="voteRadioGroup"
+    //             onChange={(e) => setSelected(e.target.value)}
+    //           >
+    //             {pollOptions}
+    //           </RadioGroup>
+    //         </FormControl>
+    //       </Box>
+    //       <div className="participantContainer">
+    //         <p>{state.vote.count} votes counted</p>
+    //         <p>Poll participants:</p>
+    //         {voteParticipants}
+    //       </div>
+    //       {props.admin && <div className="linkContainer"></div>}
+    //     </div>
+    //     <div className="buttonDivLogin">
+    //       <span>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ display: "flex" }}>
+        <div className="voteContainer">
+          <h1>{state.poll.question}</h1>
+          <div className="voteRow">
+            <Box mb={3}>
+              <FormControl component="voteOptionsForm">
+                <RadioGroup
+                  className="votingGroup"
+                  name="voteRadioGroup"
+                  onChange={(e) => setSelected(e.target.value)}
+                >
+                  {pollOptions}
+                </RadioGroup>
+              </FormControl>
+            </Box>
+            <div className="participantContainer" style={{ padding: "1rem" }}>
+              <p>
+                <b>{state.vote.count} </b>votes counted
+              </p>
+              <p>
+                <b>Participants:</b>
+              </p>
+              {voteParticipants}
+            </div>
+            {props.admin && <div className="linkContainer"></div>}
           </div>
-          {props.admin && <div className="linkContainer"></div>}
-        </div>
-        <div className="buttonDivLogin">
-          <span>
+          <div className="buttonDivLogin">
             <Button
               onClick={() => {
                 pollSocket.sendEvent("vote", {
                   userId: props.userId,
-                  pollId: pollId,
+                  pollId: props.pollId,
                   vote: selected,
                   guest: props.guest,
                 });
               }}
               // disabled={!validateForm()}
-              variant="outlined"
-              disabled={state.vote.voted || state.poll.voted || selected < 0}
-            >
-              {state.vote.voted || state.poll.voted
-                ? "You have already voted"
-                : "Vote"}
-            </Button>
-            <Button
-              onClick={() => {
-                history.push("/landing");
-              }}
-            >
-              Back to landing
-            </Button>
-          </span>
+              //         variant="outlined"
+              //         disabled={state.vote.voted || state.poll.voted || selected < 0}
+              //       >
+              //         {state.vote.voted || state.poll.voted
+              //           ? "You have already voted"
+              //           : "Vote"}
+              //       </Button>
+              //       <Button
+              //         onClick={() => {
+              //           history.push("/landing");
+              //         }}
+              //       >
+              //         Back to landing
+              //       </Button>
+              //     </span>
 
-          {props.admin && (
-            <Button
-              onClick={() => {
-                pollSocket.sendEvent("close_poll", {
-                  userId: props.userId,
-                  pollId: pollId,
-                });
-                history.push("/landing");
-              }}
-              // disabled={!validateForm()}
+              //     {props.admin && (
+              //       <Button
+              //         onClick={() => {
+              //           pollSocket.sendEvent("close_poll", {
+              //             userId: props.userId,
+              //             pollId: pollId,
+              //           });
+              //           history.push("/landing");
+              //         }}
+              //         // disabled={!validateForm()}
+              //         variant="contained"
+              //       >
+              //         Close Poll
+              //       </Button>
+              //     )}
+              //   </div>
+              // </div>
+              // <Graph state={state} />
               variant="contained"
+              disabled={state.vote.voted || selected < 0}
             >
-              Close Poll
+              <b>Vote</b>
             </Button>
-          )}
+            <Button
+              variant="contained"
+              onClick={() => history.push("/landing")}
+            >
+              Go Back
+            </Button>
+
+            {props.admin && (
+              <Button
+                onClick={() => {
+                  pollSocket.sendEvent("close_poll", {
+                    userId: props.userId,
+                    pollId: props.pollId,
+                  });
+                  history.push("/landing");
+                }}
+                // disabled={!validateForm()}
+                variant="contained"
+              >
+                <b>Close Poll</b>
+              </Button>
+            )}
+          </div>
         </div>
+        <div style={{ marginLeft: "1rem" }}></div>
+        <Graph state={state} />
       </div>
-      <Graph state={state} />
+      <ChatBox {...props} />
+      <div className="pollLink">{`Poll Link:   http://localhost:3000/poll/${
+        props.pollId || 1
+      }`}</div>
+      <div style={{ marginBottom: "5rem" }}></div>
     </div>
   );
 };

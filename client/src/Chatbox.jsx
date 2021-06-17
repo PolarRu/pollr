@@ -43,22 +43,29 @@ const Chatbox = (props) => {
 
   return (
     <div>
-      <div>{`Poll Link:   http://localhost:3000/poll/${
-        props.pollId || 1
-      }`}</div>
-      <Box>{messages}</Box>
-      <TextField
-        id={"inputText"}
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      ></TextField>
-      <Button
-        onClick={() => {
-          onClick();
-        }}
-      >
-        send message
-      </Button>
+      <div id="chatBox">
+        <div className="messages">
+          <Box style={{ maxHeight: "60vh", overflowY: "scroll" }}>
+            {messages}
+          </Box>
+        </div>
+        <div style={{ margin: ".5rem" }}>
+          <TextField
+            id={"inputText"}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          ></TextField>
+        </div>
+        <div className="sendMessage">
+          <Button
+            onClick={() => {
+              onClick();
+            }}
+          >
+            send message
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
