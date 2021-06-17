@@ -3,7 +3,7 @@ import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Login from "./login.jsx";
 import Landing from "./landing.jsx";
 import Vote from "./Vote.jsx";
-import Session from "./Session.jsx";
+// import Session from "./Session.jsx";
 import ChatBox from "./Chatbox.jsx";
 import axios from "axios";
 import * as ENV from "./env";
@@ -48,7 +48,13 @@ export default function App() {
         />
         <Route
           path="/landing"
-          render={(props) => <Landing {...props} userId={userId} />}
+          render={(props) => (
+            <Landing
+              {...props}
+              updateUser={(id) => setUserId(id)}
+              userId={userId}
+            />
+          )}
           exact
         />
         {/* <Route

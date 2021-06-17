@@ -54,23 +54,19 @@ body {
   margin-left: 20px;
 }
 .add {
-  margin-left: 100px;
   text-decoration: solid;
   font-weight: bolder;
   font-size: 80px;
 }
 .startPoll {
   margin-top: 20px;
-  margin-left: 70px;
   cursor: pointer;
   color: rgb(7, 6, 6);
 }
 .logout {
-  margin-top: 20px;
-  margin-left: 80px;
+  margin-top: 10px;
   border: none;
   display: inline-block;
-  box-shadow: 0 0 10px grey;
   font-weight: bolder;
   text-decoration: solid;
   padding: 10px;
@@ -92,7 +88,11 @@ body {
   max-height: 50vh;
   overflow-y: scroll;
   width: 480px;
+  padding-top: 0.5rem;
+  background-color: white;
+  opacity: 0.95;
 }
+
 #pollCreator {
   display: flex;
   flex-direction: column;
@@ -101,6 +101,8 @@ body {
   border-radius: 8px;
   box-shadow: 0 0 10px grey;
   width: 360px;
+  padding-bottom: 1rem;
+  background-color: white;
 }
 
 .voteContainer {
@@ -166,6 +168,8 @@ body {
   height: 20vh;
   min-height: 150px;
   margin: 20px 20px;
+  padding-top: 4px;
+  /* background-color: white; */
 }
 
 .pollsHistoryDisplayContents {
@@ -177,7 +181,17 @@ body {
   text-decoration: underline;
   font-weight: bold;
   margin-left: 30px;
+  transition: all 0.2s;
 }
+
+.pollLink:hover {
+  opacity: 0.8;
+}
+
+.pollLink:active {
+  opacity: 1;
+}
+
 .sendMessage {
   margin-top: 20px;
   margin-left: 10px;
@@ -205,9 +219,21 @@ body {
 .messages {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 6px black;
+  /* box-shadow: 0 0 6px black; */
+  padding: 4px;
+  border: 1px solid gray;
   width: 365px;
+  min-height: 1rem;
   /* margin-bottom: 20px;
   margin-top: 20px;
   margin-left: 20px; */
+}
+
+.textField {
+  /* margin: ".5rem"; */
+  /* display: "flex";
+  align-items: center; */
+  margin-right: 7px;
+  /* margin-right: "2px"; */
+  /* border: "1px solid black"; */
 }

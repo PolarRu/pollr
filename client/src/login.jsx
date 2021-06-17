@@ -4,30 +4,29 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
 import { useHistory } from "react-router-dom";
-import GuestLogIn from "./guestlogin.jsx";
+// import GuestLogIn from "./guestlogin.jsx";
 import * as ENV from "./env";
-import { makeStyles } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core";
 /*
 Login page allows user to log in, or allows them to
 navigate to the sign up page
 */
 
 const useStyles = makeStyles({
-    btn: {
-      fontSize: 20,
-      // display: flex,
-      // align-items: center
-      // justifyContent: 'left',
-    backgroundColor: 'white',
+  btn: {
+    fontSize: 20,
+    // display: flex,
+    // align-items: center
+    // justifyContent: 'left',
+    backgroundColor: "white",
     // margin: auto,
     // padding:10
-    marginLeft: 25
-      
-    },
+    marginLeft: 25,
+  },
 });
 
 export default function Login(props) {
-  const classes = useStyles()
+  const classes = useStyles();
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -57,6 +56,7 @@ export default function Login(props) {
       .then((response) => response.json())
       .then((data) => {
         console.log("new user signed up: ", data);
+        props.updateUser(data.userId);
         history.push("/landing");
       })
       .catch((error) => {
@@ -81,7 +81,7 @@ export default function Login(props) {
         return response.json();
       })
       .then((data) => {
-        // console.log("new user logged in: ", data);
+        //if(data.noUser) return signUp();
         props.updateUser(data.userId);
         history.push(`/landing`);
       })
@@ -120,13 +120,12 @@ export default function Login(props) {
         <div>
           <div>
             <Button
-              className = {classes.btn}
+              className={classes.btn}
               onClick={() => {
                 if (validateForm()) {
                   if (isLogin) {
                     return login();
                   }
-
                   return signUp();
                 }
                 return;
@@ -143,9 +142,11 @@ export default function Login(props) {
               onClick={() => setIsLogin(!isLogin)}
               // disabled={!validateForm()}
               variant="contained"
-            > <u>
+            >
+              {" "}
+              <u>
                 {isLogin ? "Create an account" : "Already have an account?"}
-                </u>
+              </u>
             </p>
           </div>
         </div>

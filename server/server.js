@@ -90,7 +90,7 @@ app.post(
 const pollRouter = require("./routers/poll.js");
 app.use("/poll", pollRouter);
 
-/**
+/**[]
  * 404 handler
  */
 app.use("*", (req, res) => {

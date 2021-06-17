@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 
 const modalStyle = {
@@ -74,7 +73,7 @@ export default function PollsHistoryDisplay(props) {
         <h3>{question}</h3>
         <p>
           {winner.option} was the most voted for choice with
-          {winner.count} votes
+          {(" "+winner.count)} votes
         </p>
         <Button
           onClick={() => {

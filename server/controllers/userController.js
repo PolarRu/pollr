@@ -43,7 +43,8 @@ userController.verifyUser = async (req, res, next) => {
     //(find) checks for user with input username
     const user = await models.User.findOne({ username: username });
     if (!user) {
-      throw Error("user does not exist");
+      //return res.status(200).json({ noUser: "userdoesnotexist" });
+      throw Error("no user with that login");
     }
 
     const results = await bcrypt.compare(password, user.password);

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef, PureComponent } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import Graph from "./Graph.jsx";
 import ChatBox from "./Chatbox";
+import EmojiPicker from "emoji-picker-react";
 
 import {
   Button,
@@ -41,7 +42,9 @@ const Vote = (props) => {
           state = { poll: data, vote: { voted: false, count: data.voteCount } };
           setState({ ...state });
         } else if (type === "joined") {
-          state.poll.joined.push(data.userId);
+          if (state.poll.joined.findIndex((id) => id == data.userId) === -1) {
+            state.poll.joined.push(data.userId);
+          }
           setState({ ...state });
         } else if (type === "vote_update") {
           console.log(data);
@@ -128,7 +131,7 @@ const Vote = (props) => {
         <div
           key={i}
           className="participantDiv"
-        >{`${state.poll.joined[i]} has voted`}</div>
+        >{`${state.poll.joined[i]}`}</div>
       );
     } else {
       voteParticipants.push(
@@ -141,30 +144,6 @@ const Vote = (props) => {
   }
 
   return (
-    // <div>
-    //   <div className="voteContainer">
-    //     <h1>{state.poll.question}</h1>
-    //     <div className="voteRow">
-    //       <Box mb={3}>
-    //         <FormControl>
-    //           <RadioGroup
-    //             className="votingGroup"
-    //             name="voteRadioGroup"
-    //             onChange={(e) => setSelected(e.target.value)}
-    //           >
-    //             {pollOptions}
-    //           </RadioGroup>
-    //         </FormControl>
-    //       </Box>
-    //       <div className="participantContainer">
-    //         <p>{state.vote.count} votes counted</p>
-    //         <p>Poll participants:</p>
-    //         {voteParticipants}
-    //       </div>
-    //       {props.admin && <div className="linkContainer"></div>}
-    //     </div>
-    //     <div className="buttonDivLogin">
-    //       <span>
     <div
       style={{
         display: "flex",
@@ -177,7 +156,7 @@ const Vote = (props) => {
           <h1>{state.poll.question}</h1>
           <div className="voteRow">
             <Box mb={3}>
-              <FormControl component="voteOptionsForm">
+              <FormControl>
                 <RadioGroup
                   className="votingGroup"
                   name="voteRadioGroup"
@@ -203,50 +182,19 @@ const Vote = (props) => {
               onClick={() => {
                 pollSocket.sendEvent("vote", {
                   userId: props.userId,
-                  pollId: props.pollId,
+                  pollId: props.match.params.pollId,
                   vote: selected,
                   guest: props.guest,
                 });
               }}
-              // disabled={!validateForm()}
-              //         variant="outlined"
-              //         disabled={state.vote.voted || state.poll.voted || selected < 0}
-              //       >
-              //         {state.vote.voted || state.poll.voted
-              //           ? "You have already voted"
-              //           : "Vote"}
-              //       </Button>
-              //       <Button
-              //         onClick={() => {
-              //           history.push("/landing");
-              //         }}
-              //       >
-              //         Back to landing
-              //       </Button>
-              //     </span>
-
-              //     {props.admin && (
-              //       <Button
-              //         onClick={() => {
-              //           pollSocket.sendEvent("close_poll", {
-              //             userId: props.userId,
-              //             pollId: pollId,
-              //           });
-              //           history.push("/landing");
-              //         }}
-              //         // disabled={!validateForm()}
-              //         variant="contained"
-              //       >
-              //         Close Poll
-              //       </Button>
-              //     )}
-              //   </div>
-              // </div>
-              // <Graph state={state} />
               variant="contained"
-              disabled={state.vote.voted || selected < 0}
+              disabled={state.vote.voted || state.poll.voted || selected < 0}
             >
-              <b>Vote</b>
+              <b>
+                {state.vote.voted || state.poll.voted
+                  ? "You already voted"
+                  : "Vote"}
+              </b>
             </Button>
             <Button
               variant="contained"
@@ -275,11 +223,27 @@ const Vote = (props) => {
         <div style={{ marginLeft: "1rem" }}></div>
         <Graph state={state} />
       </div>
-      <ChatBox {...props} />
-      <div className="pollLink">{`Poll Link:   http://localhost:3000/poll/${
-        props.pollId || 1
-      }`}</div>
-      <div style={{ marginBottom: "5rem" }}></div>
+      <div>
+        <ChatBox {...props} />
+        <button
+          className="pollLink"
+          style={{
+            cursor: "pointer",
+            border: "none",
+            backgroundColor: "transparent",
+          }}
+          onClick={() => {
+            navigator.clipboard.writeText(
+              `http://localhost:3000/poll/${
+                props.match.params.pollId || "testing"
+              }`
+            );
+          }}
+        >{`Poll Link:   http://localhost:3000/poll/${
+          props.match.params.pollId || "testing"
+        }`}</button>
+        <div style={{ marginBottom: "12rem" }}></div>
+      </div>
     </div>
   );
 };

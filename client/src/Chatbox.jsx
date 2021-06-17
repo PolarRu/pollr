@@ -1,18 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Route, Switch } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Box from "@material-ui/core/Box";
 import Message from "./Message";
 import * as ENV from "./env";
+import EmojiPicker from "./emoji-picker";
 
 import io from "socket.io-client";
 
 const Chatbox = (props) => {
   const [message, setMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
+  const [visible, setVisible] = useState(false);
 
   const ioRef = useRef(null);
+
+  const ref = useRef();
+
+  useEffect(() => {
+    let id = setTimeout(() => {
+      if (ref.current) {
+        ref.current.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
+      }
+    }, 100);
+    return () => {
+      clearTimeout(id);
+    };
+  }, [allMessages]);
 
   useEffect(() => {
     const socket = io(ENV.API_URL);
@@ -22,7 +39,6 @@ const Chatbox = (props) => {
 
     socket.on("message", (data) => {
       setAllMessages((prev) => [...prev, data]);
-      setMessage("");
     });
 
     return () => {
@@ -33,29 +49,63 @@ const Chatbox = (props) => {
   const onClick = () => {
     if (ioRef.current) {
       ioRef.current.emit("message", { pollId: props.pollId || 1, message });
+      setMessage("");
     }
   };
 
   const messages = [];
   for (let i = 0; i < allMessages.length; i++) {
-    messages.push(<Message data={allMessages[i]} key={i} />);
+    messages.push(
+      <Message
+        data={allMessages[i]}
+        key={i}
+        customRef={i === allMessages.length - 1 ? ref : null}
+      />
+    );
   }
 
   return (
     <div>
       <div id="chatBox">
         <div className="messages">
-          <Box style={{ maxHeight: "60vh", overflowY: "scroll" }}>
+          <div style={{ maxHeight: "15rem", overflowY: "scroll" }}>
             {messages}
-          </Box>
+          </div>
         </div>
-        <div style={{ margin: ".5rem" }}>
-          <TextField
-            id={"inputText"}
+        <div
+          style={{
+            margin: ".5rem",
+            display: "flex",
+            alignItems: "center",
+            // border: "1px solid black",
+          }}
+        >
+          {/* <TextField */}
+          <input
+            type="text"
+            className="textField"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-          ></TextField>
+          ></input>
+          {/* ></TextField> */}
+          <div style={{ position: "relative" }}>
+            <button
+              style={{
+                fontSize: "1.4rem",
+                border: "none",
+                padding: "0",
+                backgroundColor: "transparent",
+                cursor: "pointer",
+              }}
+              onClick={() => setVisible(!visible)}
+            >
+              {" "}
+              &#129327;
+            </button>
+            <EmojiPicker visible={visible} setMessage={setMessage} />
+          </div>
         </div>
+
         <div className="sendMessage">
           <Button
             onClick={() => {

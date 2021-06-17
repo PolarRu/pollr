@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -47,20 +47,7 @@ export default function Landing(props) {
     // create delete icon for all options if there are more than 2 options
     let deleteIcon = totalOptions > 2 ? true : false;
     optionsArray.push(
-      // <div key={i} style={{ width: "100%", display: "flex" }}>
-      //   <TextField
-      //     key={`OptionText${i}`}
-      //     type="text"
-      //     value={optionNames[`${i}`]}
-      //     onChange={(e) => {
-      //       let newOptions = [...optionNames];
-      //       newOptions[`${i}`] = e.target.value;
-      //       setOptionNames(newOptions);
-      //     }}
-      //     label={`Option ${i + 1}`}
-      //     variant="outlined"
-      //   />
-      <Box m={2}>
+      <Box key={i} m={2} style={{ display: "flex", position: "relative" }}>
         <div className="options">
           <span>
             <TextField
@@ -77,25 +64,27 @@ export default function Landing(props) {
             />
           </span>
         </div>
-        {deleteIcon && (
-          <span>
-            <Tooltip title="Delete Poll Option">
-              <IconButton
-                aria-label="delete"
-                onClick={() => {
-                  let newOptions = [...optionNames];
-                  newOptions.splice(`${i}`, 1);
-                  setTotalOptions((totalOptions -= 1));
-                  setOptionNames(newOptions);
-                }}
-                // remove delete icon from tab selection cycle
-                tabIndex="-1"
-              >
-                <CloseIcon />
-              </IconButton>
-            </Tooltip>
-          </span>
-        )}
+        <div style={{ width: "50px", position: "absolute", left: "100%" }}>
+          {deleteIcon && (
+            <span>
+              <Tooltip title="Delete Poll Option">
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => {
+                    let newOptions = [...optionNames];
+                    newOptions.splice(`${i}`, 1);
+                    setTotalOptions((totalOptions -= 1));
+                    setOptionNames(newOptions);
+                  }}
+                  // remove delete icon from tab selection cycle
+                  tabIndex="-1"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Tooltip>
+            </span>
+          )}
+        </div>
       </Box>
     );
   }
@@ -125,6 +114,7 @@ export default function Landing(props) {
   };
 
   async function logout() {
+    props.updateUser(null);
     await fetch(ENV.API_URL + "/logout", {
       method: "POST",
       credentials: "include",
@@ -134,52 +124,52 @@ export default function Landing(props) {
 
   return (
     <div id="landingPage">
-      <div id="pollCreator">
+      {/* <EmojiPicker /> */}
+      <div id="pollCreator" style={{ marginBottom: "1rem" }}>
         <h1>Create Poll</h1>
 
-        <div>
-          <Box m={2}>
-            <div className="pollOption">
-              <TextField
-                id="pollname"
-                onSubmit={handleSubmit}
-                type="text"
-                value={pollName}
-                onChange={(e) => setPollName(e.target.value)}
-                label="Poll Name"
-                variant="outlined"
-              />
-            </div>
-          </Box>
-          {[optionsArray]}
-          <div className="add">
-            <Button
-              onClick={() => {
-                setTotalOptions((totalOptions += 1));
-              }}
+        <Box m={2}>
+          <div className="pollOption">
+            <TextField
+              id="pollname"
+              onSubmit={handleSubmit}
+              type="text"
+              value={pollName}
+              onChange={(e) => setPollName(e.target.value)}
+              label="Poll Name"
               variant="outlined"
-            >
-              <b>+</b>
-            </Button>
+            />
           </div>
-          <div className="startPoll">
-            <Button
-              onClick={() => createPoll()}
-              disabled={!validateForm()}
-              variant="contained"
-            >
-              <b>Start Poll</b>
-            </Button>
-          </div>
-          <div className="logout">
-            <Button
-              onClick={() => {
-                logout();
-              }}
-            >
-              <b>Log Out</b>
-            </Button>
-          </div>
+        </Box>
+        {[optionsArray]}
+        <div className="add">
+          <Button
+            onClick={() => {
+              setTotalOptions((totalOptions += 1));
+            }}
+            variant="outlined"
+          >
+            <b>+</b>
+          </Button>
+        </div>
+        <div className="startPoll">
+          <Button
+            onClick={() => createPoll()}
+            disabled={!validateForm()}
+            variant="contained"
+          >
+            <b>Start Poll</b>
+          </Button>
+        </div>
+        <div className="logout">
+          <Button
+            variant="outlined"
+            onClick={() => {
+              logout();
+            }}
+          >
+            <b>Log Out</b>
+          </Button>
         </div>
       </div>
       <div style={{ marginLeft: "2rem" }}></div>
