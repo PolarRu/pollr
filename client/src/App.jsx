@@ -4,6 +4,7 @@ import Login from "./login.jsx";
 import Landing from "./landing.jsx";
 import Vote from "./Vote.jsx";
 import Session from "./Session.jsx";
+import ChatBox from "./Chatbox.jsx";
 import axios from "axios";
 import * as ENV from "./env";
 
@@ -19,6 +20,7 @@ export default function App() {
       .get(ENV.API_URL + "/login", { withCredentials: true })
       .then((res) => {
         if (res.data.userId) {
+          console.log(res.data.userId);
           setUserId(res.data.userId);
           if (location.pathname === "/") {
             history.push("/landing");
@@ -37,7 +39,13 @@ export default function App() {
       <Switch>
         <Route path="/test" render={(props) => <ChatBox {...props} />} exact />
         {/* <Route path="/" render={(props) => <Session {...props} />} exact /> */}
-        <Route path="/login" render={(props) => <Login {...props} />} exact />
+        <Route
+          path="/login"
+          render={(props) => (
+            <Login {...props} updateUser={(id) => setUserId(id)} />
+          )}
+          exact
+        />
         <Route
           path="/landing"
           render={(props) => <Landing {...props} userId={userId} />}
@@ -54,7 +62,12 @@ export default function App() {
         /> */}
         <Route
           path="/poll/:pollId"
-          render={(props) => <Vote {...props} userId={userId} />}
+          render={(props) => (
+            <div>
+              <Vote {...props} userId={userId} />{" "}
+              <ChatBox pollId={props.match.params.pollId} />
+            </div>
+          )}
           exact
         />
       </Switch>

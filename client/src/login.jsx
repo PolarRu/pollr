@@ -67,6 +67,7 @@ export default function Login(props) {
       })
       .then((data) => {
         // console.log("new user logged in: ", data);
+        props.updateUser(data.userId);
         history.push(`/landing`);
       })
       .catch((error) => {

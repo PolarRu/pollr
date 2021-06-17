@@ -1,5 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, PureComponent } from "react";
 import { useHistory } from "react-router-dom";
+import Graph from "./Graph.jsx";
+// import {
+//   BarChart,
+//   Bar,
+//   Cell,
+//   XAxis,
+//   YAxis,
+//   CartesianGrid,
+//   Tooltip,
+//   Legend,
+//   ResponsiveContainer,
+// } from "recharts";
 import {
   Button,
   Box,
@@ -18,11 +30,13 @@ const randomID = Math.floor(Math.random() * 1000000);
 const Vote = (props) => {
   let [state, setState] = useState(null);
   const [selected, setSelected] = useState(-1);
-  const [graphData, setgraphData] = useState(null);
+  // const [graphData, setgraphData] = useState(null);
   // copy to clipboard functionality
   const textAreaRef = useRef(null);
   const history = useHistory();
   const pollId = props.match.params.pollId;
+
+  console.log(state);
 
   useEffect(() => {
     if (!props.userId) return;
@@ -33,6 +47,8 @@ const Vote = (props) => {
         console.log("Got event: ", type, data);
 
         if (type === "subscribe") {
+          console.log("in subscribe");
+
           state = { poll: data, vote: { voted: false, count: data.voteCount } };
           setState({ ...state });
         } else if (type === "joined") {
@@ -42,13 +58,12 @@ const Vote = (props) => {
           console.log(data);
           state.vote.count = data.voteCount;
           state.poll.responses.push(data.vote);
-
-          const data = await fetch(ENV.API_URL + "/poll/" + pollId);
-          const json = await data.json();
-          console.log(json);
-          setGraphData(json);
-
           setState({ ...state });
+          // const data = await fetch(ENV.API_URL + "/poll/" + pollId);
+          // const json = await data.json();
+          // console.log("graph data");
+          // console.log(json);
+          // setGraphData(json);
         } else if (type === "voted") {
           state.vote.count = data.voteCount;
           state.vote.voted = true;
@@ -137,72 +152,74 @@ const Vote = (props) => {
   }
 
   return (
-    <div className="voteContainer">
-      <h1>{state.poll.question}</h1>
-      <div className="voteRow">
-        <Box mb={3}>
-          <FormControl>
-            <RadioGroup
-              className="votingGroup"
-              name="voteRadioGroup"
-              onChange={(e) => setSelected(e.target.value)}
-            >
-              {pollOptions}
-            </RadioGroup>
-          </FormControl>
-        </Box>
-        <div className="participantContainer">
-          <p>{state.vote.count} votes counted</p>
-          <p>Poll participants:</p>
-          {voteParticipants}
+    <div>
+      <div className="voteContainer">
+        <h1>{state.poll.question}</h1>
+        <div className="voteRow">
+          <Box mb={3}>
+            <FormControl>
+              <RadioGroup
+                className="votingGroup"
+                name="voteRadioGroup"
+                onChange={(e) => setSelected(e.target.value)}
+              >
+                {pollOptions}
+              </RadioGroup>
+            </FormControl>
+          </Box>
+          <div className="participantContainer">
+            <p>{state.vote.count} votes counted</p>
+            <p>Poll participants:</p>
+            {voteParticipants}
+          </div>
+          {props.admin && <div className="linkContainer"></div>}
         </div>
-        {props.admin && <div className="linkContainer"></div>}
-      </div>
-      <div className="buttonDivLogin">
-        <span>
-          <Button
-            onClick={() => {
-              pollSocket.sendEvent("vote", {
-                userId: props.userId,
-                pollId: pollId,
-                vote: selected,
-                guest: props.guest,
-              });
-            }}
-            // disabled={!validateForm()}
-            variant="outlined"
-            disabled={state.vote.voted || state.poll.voted || selected < 0}
-          >
-            {state.vote.voted || state.poll.voted
-              ? "You have already voted"
-              : "Vote"}
-          </Button>
-          <Button
-            onClick={() => {
-              history.push("/landing");
-            }}
-          >
-            Back to landing
-          </Button>
-        </span>
+        <div className="buttonDivLogin">
+          <span>
+            <Button
+              onClick={() => {
+                pollSocket.sendEvent("vote", {
+                  userId: props.userId,
+                  pollId: pollId,
+                  vote: selected,
+                  guest: props.guest,
+                });
+              }}
+              // disabled={!validateForm()}
+              variant="outlined"
+              disabled={state.vote.voted || state.poll.voted || selected < 0}
+            >
+              {state.vote.voted || state.poll.voted
+                ? "You have already voted"
+                : "Vote"}
+            </Button>
+            <Button
+              onClick={() => {
+                history.push("/landing");
+              }}
+            >
+              Back to landing
+            </Button>
+          </span>
 
-        {props.admin && (
-          <Button
-            onClick={() => {
-              pollSocket.sendEvent("close_poll", {
-                userId: props.userId,
-                pollId: pollId,
-              });
-              history.push("/landing");
-            }}
-            // disabled={!validateForm()}
-            variant="contained"
-          >
-            Close Poll
-          </Button>
-        )}
+          {props.admin && (
+            <Button
+              onClick={() => {
+                pollSocket.sendEvent("close_poll", {
+                  userId: props.userId,
+                  pollId: pollId,
+                });
+                history.push("/landing");
+              }}
+              // disabled={!validateForm()}
+              variant="contained"
+            >
+              Close Poll
+            </Button>
+          )}
+        </div>
       </div>
-      <ChatBox pollId={pollId} />
+      <Graph state={state} />
     </div>
   );
 };
